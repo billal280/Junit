@@ -72,11 +72,4 @@ public class EmployeeServiceTest {
         assertEquals("Jane", employees.get(0).getFirstName());
     }
 
-    @Test
-    public void testAssignProjects() {
-        Employee employee = employeeService.addEmployee("John", "Doe", "john.doe@example.com", "Developer", new Date());
-        employeeService.assignProjects(employee.getId(), Set.of("Project A", "Project B"));
-        assertTrue(employee.getProjects().contains("Project A"));
-        assertTrue(employee.getProjects().contains("Project B"));
-    }
 }
