@@ -4,6 +4,7 @@ import org.atelier1.exception.EmployeeNotFoundException;
 import org.atelier1.model.Employee;
 import org.atelier1.service.EmployeeService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -21,6 +22,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("Test de l'ajout d'un employé")
     public void testAddEmployee() {
         Employee employee = employeeService.addEmployee("John", "Doe", "john.doe@example.com", "Developer", new Date());
         assertNotNull(employee.getId());
@@ -28,6 +30,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("Test duplication d'email")
     public void testAddEmployeeDuplicateEmail() {
         employeeService.addEmployee("John", "Doe", "john.doe@example.com", "Developer", new Date());
         assertThrows(EmailAlreadyExistsException.class, () ->
@@ -35,6 +38,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("Test suppression employé")
     public void testDeleteEmployee() {
         Employee employee = employeeService.addEmployee("John", "Doe", "john.doe@example.com", "Developer", new Date());
         employeeService.deleteEmployee(employee.getId());
@@ -42,12 +46,14 @@ public class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("Test suppression d'un admin")
     public void testDeleteAdminEmployee() {
         Employee admin = employeeService.addEmployee("Admin", "User", "admin@example.com", "Admin", new Date());
         assertThrows(CannotDeleteAdminException.class, () -> employeeService.deleteEmployee(admin.getId()));
     }
 
     @Test
+    @DisplayName("Test modification d'un employé")
     public void testUpdateEmployee() {
         Employee employee = employeeService.addEmployee("John", "Doe", "john.doe@example.com", "Developer", new Date());
         employeeService.updateEmployee(employee.getId(), "John", "Smith", "john.smith@example.com", "Manager", new Date());
@@ -56,6 +62,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("Test liste de tout les employés")
     public void testListAllEmployees() {
         employeeService.addEmployee("John", "Doe", "john.doe@example.com", "Developer", new Date());
         employeeService.addEmployee("Jane", "Smith", "jane.smith@example.com", "Tester", new Date());
@@ -64,6 +71,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("Test recherche d'un employé")
     public void testSearchEmployees() {
         employeeService.addEmployee("John", "Doe", "john.doe@example.com", "Developer", new Date());
         employeeService.addEmployee("Jane", "Smith", "jane.smith@example.com", "Tester", new Date());
@@ -73,6 +81,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("Test assignation d'un projet")
     public void testAssignProjects() {
         Employee employee = employeeService.addEmployee("John", "Doe", "john.doe@example.com", "Developer", new Date());
         employeeService.assignProjects(employee.getId(), Set.of("Project A", "Project B"));
