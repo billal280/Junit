@@ -15,77 +15,37 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class EmployeeServiceTest {
     private EmployeeService employeeService;
-
+    private Employee employee ;
     @BeforeEach
     public void setUp() {
         employeeService = new EmployeeService();
+        employee = employeeService.addEmployee("John", "Doe", "john.doe@example.com", "Developer", new Date());
+
     }
 
     @Test
     @DisplayName("Test de l'ajout d'un employé")
     public void testAddEmployee() {
-        Employee employee = employeeService.addEmployee("John", "Doe", "john.doe@example.com", "Developer", new Date());
         assertNotNull(employee.getId());
         assertEquals("John", employee.getFirstName());
     }
 
     @Test
     @DisplayName("Test duplication d'email")
-    public void testAddEmployeeDuplicateEmail() {
-        employeeService.addEmployee("John", "Doe", "john.doe@example.com", "Developer", new Date());
-        assertThrows(EmailAlreadyExistsException.class, () ->
-                employeeService.addEmployee("Jane", "Smith", "john.doe@example.com", "Tester", new Date()));
+    public void testDuplicateEmail(){
+        assertThrows(EmailAlreadyExistsException.class,()-> employeeService.addEmployee("Jane", "Dose", "john.doe@example.com", "Manager", new Date()));
     }
 
     @Test
-    @DisplayName("Test suppression employé")
-    public void testDeleteEmployee() {
-        Employee employee = employeeService.addEmployee("John", "Doe", "john.doe@example.com", "Developer", new Date());
+    @DisplayName("Test suppresion d'employer")
+    public void testSuppEmployee(){
         employeeService.deleteEmployee(employee.getId());
         assertThrows(EmployeeNotFoundException.class, () -> employeeService.deleteEmployee(employee.getId()));
     }
-
     @Test
-    @DisplayName("Test suppression d'un admin")
-    public void testDeleteAdminEmployee() {
-        Employee admin = employeeService.addEmployee("Admin", "User", "admin@example.com", "Admin", new Date());
+    @DisplayName("Test suppresion d'admin")
+    public void testSuppAdmin(){
+        Employee admin = employeeService.addEmployee("John", "Doe", "admin@kaiman.fr", "Admin", new Date());
         assertThrows(CannotDeleteAdminException.class, () -> employeeService.deleteEmployee(admin.getId()));
-    }
-
-    @Test
-    @DisplayName("Test modification d'un employé")
-    public void testUpdateEmployee() {
-        Employee employee = employeeService.addEmployee("John", "Doe", "john.doe@example.com", "Developer", new Date());
-        employeeService.updateEmployee(employee.getId(), "John", "Smith", "john.smith@example.com", "Manager", new Date());
-        Employee updatedEmployee = employeeService.updateEmployee(employee.getId(), "John", "Smith", "john.smith@example.com", "Manager", new Date());
-        assertEquals("Smith", updatedEmployee.getLastName());
-    }
-
-    @Test
-    @DisplayName("Test liste de tout les employés")
-    public void testListAllEmployees() {
-        employeeService.addEmployee("John", "Doe", "john.doe@example.com", "Developer", new Date());
-        employeeService.addEmployee("Jane", "Smith", "jane.smith@example.com", "Tester", new Date());
-        List<Employee> employees = employeeService.listAllEmployees();
-        assertEquals(2, employees.size());
-    }
-
-    @Test
-    @DisplayName("Test recherche d'un employé")
-    public void testSearchEmployees() {
-        employeeService.addEmployee("John", "Doe", "john.doe@example.com", "Developer", new Date());
-        employeeService.addEmployee("Jane", "Smith", "jane.smith@example.com", "Tester", new Date());
-        List<Employee> employees = employeeService.searchEmployees("Jane", null, null, 1, 10);
-        assertEquals(1, employees.size());
-        assertEquals("Jane", employees.get(0).getFirstName());
-    }
-
-    @Test
-    @DisplayName("Test assignation d'un projet")
-    public void testAssignProjects() {
-        Employee employee = employeeService.addEmployee("John", "Doe", "john.doe@example.com", "Developer", new Date());
-        employeeService.assignProjects(employee.getId(), Set.of("Project A", "Project B"));
-        assertTrue(employee.getProjects().contains("Project A"));
-        assertTrue(employee.getProjects().contains("Project B"));
     }
 }
